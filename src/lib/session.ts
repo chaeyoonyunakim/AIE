@@ -14,13 +14,24 @@ export interface SessionData {
  * iron-session configuration.
  *
  * The password must be at least 32 characters. In production this
- * would come from an environment variable; for the hackathon
- * prototype a hard-coded value is acceptable.
+ * MUST come from the SESSION_SECRET environment variable.
  */
+function getSessionSecret(): string {
+  const secret = process.env.SESSION_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        "SESSION_SECRET environment variable is required in production"
+      );
+    }
+    // Development-only fallback — never used in production
+    return "dsa-allowance-dev-only-secret-key-32chars!";
+  }
+  return secret;
+}
+
 export const sessionOptions: SessionOptions = {
-  password:
-    process.env.SESSION_SECRET ??
-    "dsa-allowance-service-secret-key-at-least-32-chars!",
+  password: getSessionSecret(),
   cookieName: "dsa_session",
   cookieOptions: {
     httpOnly: true,

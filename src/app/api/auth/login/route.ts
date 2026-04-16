@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
+import bcrypt from "bcrypt";
 import { readUsers } from "@/lib/data-store";
 import { sessionOptions, SessionData } from "@/lib/session";
 
@@ -41,9 +42,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Compare password — plain text comparison for prototype
-    // In production, use bcrypt.compare(password, user.password_hash)
-    const passwordValid = password === user.password_hash;
+    // Compare password using bcrypt
+    const passwordValid = await bcrypt.compare(password, user.password_hash);
 
     if (!passwordValid) {
       return NextResponse.json(

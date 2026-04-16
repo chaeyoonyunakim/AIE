@@ -106,3 +106,15 @@ data/                   # JSON data files (cases, users, workflow states, policy
 - **Mocked services with clean interfaces** — notification and AI summary services can be swapped for real implementations (GOV.UK Notify, OpenAI) by changing a single export
 - **Property-based testing** — 28 formal correctness properties validated with fast-check, covering validation, workflow transitions, policy matching, notifications, and more
 - **Spec-driven development** — requirements, design, and implementation tasks documented in `.kiro/specs/`
+
+## Security
+
+- Passwords stored as bcrypt hashes (cost factor 12), never in plain text
+- Login uses `bcrypt.compare` for constant-time password verification
+- Session cookies are encrypted via `iron-session` with a secret from environment variables
+- 8-hour inactivity timeout with automatic session expiry
+- Cookie flags: `httpOnly`, `sameSite: lax`, `secure` in production
+- Case reference input validated against format regex before database lookup
+- Reassignment restricted to team leaders only
+- Input length limits on notes and decision reasons (2000 chars)
+- Generic login error messages — no indication of which field is wrong

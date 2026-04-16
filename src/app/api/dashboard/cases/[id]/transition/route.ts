@@ -60,6 +60,14 @@ export async function POST(
       );
     }
 
+    // Limit note and decision reason length to prevent abuse
+    if (note.length > 2000) {
+      return NextResponse.json(
+        { error: "Note must be 2000 characters or fewer" },
+        { status: 400 }
+      );
+    }
+
     // Validate decisionReason for terminal states
     if (
       (toState === "approved" || toState === "rejected") &&
@@ -70,6 +78,13 @@ export async function POST(
           error:
             "Enter a decision reason before approving or rejecting this case",
         },
+        { status: 400 }
+      );
+    }
+
+    if (decisionReason && decisionReason.length > 2000) {
+      return NextResponse.json(
+        { error: "Decision reason must be 2000 characters or fewer" },
         { status: 400 }
       );
     }

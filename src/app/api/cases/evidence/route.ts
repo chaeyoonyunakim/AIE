@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readCases, writeCases } from "@/lib/data-store";
-import { MockNotificationService } from "@/services/notifications";
 
 interface EvidencePayload {
   caseReference: string;
   description: string;
   files: Array<{ name: string; size: number; type: string }>;
 }
+
+// Validate case reference format
+const CASE_REF_REGEX = /^DSA-\d{4}-\d{5}$/;
 
 export async function POST(request: NextRequest) {
   try {
@@ -29,6 +31,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate case reference format
+    if (!CASE_REF_REGEX.test(caseReference)) {
+      return NextResponse.json(
+        { error: "No application found for that reference number" },
+        { status: 404 }
+      );
+    }
+
     if (!description || description.trim().length === 0) {
       return NextResponse.json(
         { error: "A description of the evidence is required" },
@@ -36,9 +46,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!files || files.length === 0) {
+    // Limit description length
+    if (description.length > 2000) {
+      return NextResponse.json(
+        { error: "Description must be 2000 characters or fewer" },
+        { status: 400 }
+      );
+    }
+
+    if (!files || !Array.isArray(files) || files.length === 0) {
       return NextResponse.json(
         { error: "At least one file must be uploaded" },
+        { status: 400 }
+      );
+    }
+
+    // Limit number of files
+    if (files.length > 20) {
+      return NextResponse.json(
+        { error: "You can upload up to 20 files at a time" },
         { status: 400 }
       );
     }
@@ -67,7 +93,10 @@ export async function POST(request: NextRequest) {
     }
 
     const now = new Date().toISOString();
-    const fileNames = files.map((f) => f.name).join(", ");
+    // Sanitize file names — strip path separators
+    const fileNames = files
+      .map((f) => (f.name || "unknown").replace(/[/\\]/g, "_"))
+      .join(", ");
 
     // Update case: transition to evidence_received, add timeline entry
     caseRecord.status = "evidence_received";
@@ -75,16 +104,11 @@ export async function POST(request: NextRequest) {
     caseRecord.timeline.push({
       date: now,
       event: "evidence_received",
-      note: `Evidence uploaded by applicant: ${description.trim()}. Files: ${fileNames}`,
+      note: `Evidence uploaded by applicant: ${description.trim().slice(0, 500)}. Files: ${fileNames.slice(0, 500)}`,
     });
 
     cases[caseIndex] = caseRecord;
     writeCases(cases);
-
-    // Send notification to applicant confirming evidence received
-    const notificationService = new MockNotificationService();
-    const confirmMsg = `Evidence received for case ${caseReference}. A caseworker will review your documents.`;
-    console.log(`[Notification] Evidence confirmation: ${confirmMsg}`);
 
     return NextResponse.json(
       { message: "Evidence uploaded successfully", caseReference },

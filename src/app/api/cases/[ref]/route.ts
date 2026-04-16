@@ -20,6 +20,16 @@ export async function GET(
 ) {
   try {
     const { ref } = await params;
+
+    // Validate case reference format to prevent injection
+    const caseRefRegex = /^DSA-\d{4}-\d{5}$/;
+    if (!caseRefRegex.test(ref)) {
+      return NextResponse.json(
+        { error: "No application found for that reference number. Check the reference and try again." },
+        { status: 404 }
+      );
+    }
+
     const cases = readCases();
     const found = cases.find((c) => c.case_id === ref);
 

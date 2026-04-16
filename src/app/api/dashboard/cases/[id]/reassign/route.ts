@@ -19,9 +19,9 @@ export async function POST(
       return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
     }
 
-    if (session.role !== "team_leader" && session.role !== "caseworker") {
+    if (session.role !== "team_leader") {
       return NextResponse.json(
-        { error: "You do not have permission to reassign cases" },
+        { error: "Only team leaders can reassign cases" },
         { status: 403 }
       );
     }

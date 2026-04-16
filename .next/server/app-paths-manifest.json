@@ -1,6 +1,0 @@
-{
-  "/_not-found/page": "app/_not-found/page.js",
-  "/page": "app/page.js",
-  "/api/apply/ai-assist/route": "app/api/apply/ai-assist/route.js",
-  "/apply/personal-details/page": "app/apply/personal-details/page.js"
-}

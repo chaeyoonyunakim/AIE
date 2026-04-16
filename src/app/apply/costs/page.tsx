@@ -8,6 +8,7 @@ import {
   validateCostAmount,
   ValidationError,
 } from "@/lib/validation";
+import AiAssistPanel from "@/components/AiAssistPanel";
 
 const MAX_COST_ITEMS = 10;
 
@@ -141,6 +142,16 @@ export default function CostsPage() {
         )}
 
         <h1 className="govuk-heading-l">Cost items</h1>
+
+        <AiAssistPanel
+          page="costs"
+          onSuggestionClick={(suggestion) => {
+            if (items.length < MAX_COST_ITEMS) {
+              setItems((prev) => [...prev, { ...createEmptyCostItem(), description: suggestion }]);
+            }
+          }}
+        />
+
         <p className="govuk-body">
           Add the details of each disability-related cost you are claiming for.
           You can add up to {MAX_COST_ITEMS} cost items.

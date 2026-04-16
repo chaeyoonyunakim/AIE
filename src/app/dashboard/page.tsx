@@ -149,7 +149,12 @@ export default function CaseListPage() {
   return (
     <div className="govuk-width-container">
       <main className="govuk-main-wrapper" id="main-content" role="main">
-        <h1 className="govuk-heading-l">Your cases</h1>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <h1 className="govuk-heading-l">Your cases</h1>
+          <a href="/dashboard/insights" className="govuk-button govuk-button--secondary" style={{ marginBottom: "20px" }}>
+            View insights
+          </a>
+        </div>
 
         {error && (
           <div className="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabIndex={-1}>

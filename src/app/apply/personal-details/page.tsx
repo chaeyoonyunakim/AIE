@@ -4,6 +4,7 @@ import { useState, useRef, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "@/lib/form-context";
 import { validateRequired, validateDateOfBirth, ValidationError } from "@/lib/validation";
+import AiAssistPanel from "@/components/AiAssistPanel";
 
 const SEX_OPTIONS = [
   { value: "male", label: "Male" },
@@ -123,6 +124,8 @@ export default function PersonalDetailsPage() {
         )}
 
         <h1 className="govuk-heading-l">Personal details</h1>
+
+        <AiAssistPanel page="personal-details" />
 
         <form onSubmit={handleSubmit} noValidate>
           {/* Customer Reference Number (optional) */}

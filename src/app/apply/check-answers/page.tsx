@@ -3,6 +3,7 @@
 import { useState, useRef, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "@/lib/form-context";
+import AiAssistPanel from "@/components/AiAssistPanel";
 
 const SEX_LABELS: Record<string, string> = {
   male: "Male",
@@ -118,6 +119,8 @@ export default function CheckAnswersPage() {
         )}
 
         <h1 className="govuk-heading-l">Check your answers</h1>
+
+        <AiAssistPanel page="check-answers" />
 
         {/* Personal details */}
         <h2 className="govuk-heading-m">Personal details</h2>

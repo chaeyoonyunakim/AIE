@@ -4,6 +4,7 @@ import { useState, useRef, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "@/lib/form-context";
 import { validateRequired, ValidationError } from "@/lib/validation";
+import AiAssistPanel from "@/components/AiAssistPanel";
 
 export default function UniversityPage() {
   const router = useRouter();
@@ -84,6 +85,8 @@ export default function UniversityPage() {
         )}
 
         <h1 className="govuk-heading-l">University details</h1>
+
+        <AiAssistPanel page="university" />
 
         <form onSubmit={handleSubmit} noValidate>
           {/* University name */}

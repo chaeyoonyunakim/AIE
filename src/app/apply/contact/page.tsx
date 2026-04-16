@@ -9,6 +9,7 @@ import {
   validateUkPhoneNumber,
   ValidationError,
 } from "@/lib/validation";
+import AiAssistPanel from "@/components/AiAssistPanel";
 
 const CHANNEL_OPTIONS = [
   { value: "email", label: "Email" },
@@ -107,6 +108,8 @@ export default function ContactPage() {
         )}
 
         <h1 className="govuk-heading-l">How would you like to be contacted?</h1>
+
+        <AiAssistPanel page="contact" />
 
         <form onSubmit={handleSubmit} noValidate>
           <div className={`govuk-form-group${channelError ? " govuk-form-group--error" : ""}`}>

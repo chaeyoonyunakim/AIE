@@ -4,6 +4,7 @@ import { useState, useRef, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "@/lib/form-context";
 import { validateRequired, validatePostcode, ValidationError } from "@/lib/validation";
+import AiAssistPanel from "@/components/AiAssistPanel";
 
 export default function AddressPage() {
   const router = useRouter();
@@ -90,6 +91,8 @@ export default function AddressPage() {
         )}
 
         <h1 className="govuk-heading-l">Address</h1>
+
+        <AiAssistPanel page="address" />
 
         <form onSubmit={handleSubmit} noValidate>
           {/* Address line 1 */}
